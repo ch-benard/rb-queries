@@ -38,12 +38,6 @@ SELECT
 	END
 	AS "Accès à l'eau",
 	CONCAT(
-	--access_to_water
-	CASE  access_to_water
-	WHEN TRUE THEN CONCAT('Accès à l''eau', CHR(13),CHR(10))
-	WHEN FALSE THEN CONCAT('Pas d''accès à l''eau', CHR(13),CHR(10))
-	ELSE CONCAT('Accès à l''eau non renseigné', CHR(13),CHR(10))
-	END,
 	-- water_potable
 	CASE water_potable
 	WHEN TRUE THEN CONCAT('Eau potable', CHR(13),CHR(10))
@@ -216,28 +210,26 @@ SELECT
 	-- Accès à l'électricité
 	CONCAT(
 	CASE fk_electricity_type
-	WHEN 3 THEN CONCAT('Oui', CHR(13), CHR(10))
-	WHEN 2 THEN CONCAT('Non', CHR(13), CHR(10))
-	WHEN 1 THEN CONCAT('Inconnu', CHR(13), CHR(10))
+	WHEN 3 THEN 'Oui'
+	WHEN 2 THEN 'Non'
+	WHEN 1 THEN 'Inconnu'
 	ELSE NULL
 	END
 	) AS "Accès à l'électricité",
 	-- Présence de nuisible
-	CONCAT(
 	CASE vermin
-	WHEN TRUE THEN CONCAT('Présence de nuisibles sur site ou à proximité', CHR(13), CHR(10))
-	WHEN FALSE THEN CONCAT('Pas de nuisibles sur site ou à proximité', CHR(13), CHR(10))
-	ELSE NULL
-	END,
+	WHEN TRUE THEN 'Oui'
+	WHEN FALSE THEN 'Non'
+	ELSE 'Inconnu'
+	END AS "Présence de nuisibles",
 	CASE
-	WHEN vermin_comments IS NOT NULL THEN CONCAT(vermin_comments, CHR(13), CHR(10))
+	WHEN vermin_comments IS NOT NULL THEN vermin_comments
 	ELSE NULL
-	END
-	) AS "Présence de nuisibles",
+	END AS "Détail présence de nuisibles",
 	-- Prévention incendie
 	CASE fire_prevention_measures
-	WHEN TRUE THEN CONCAT('Oui', CHR(13), CHR(10))
-	WHEN FALSE THEN CONCAT('Non', CHR(13), CHR(10))
+	WHEN TRUE THEN 'Oui'
+	WHEN FALSE THEN 'Non'
 	ELSE 'Inconnu'
 	END AS "Prévention incendie",
 	-- Détail prévention incendie
@@ -252,7 +244,8 @@ SELECT
 	WHEN '2021'
 	THEN 'oui'
 	END
-	AS "Objectif résorption 2021"
+	AS "Objectif résorption 2021",
+	s.resorption_target AS "Objectif résorption"
 FROM
 	shantytowns s
 LEFT JOIN
