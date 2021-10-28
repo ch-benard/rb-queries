@@ -6,7 +6,10 @@ SELECT
 	WHEN s."name" IS NOT NULL THEN s."name"
 	ELSE s."address"
 	END AS "Nom du site",
+	s.population_total AS "Population totale",
+	soc."label" AS "Origine des ressortissants",
 	TO_CHAR(s.updated_at, 'DD/MM/YYYY hh:mm:ss') AS "Date de dernière mise à jour",
+	TO_CHAR(s.closed_at, 'DD/MM/YYYY') AS "Date de fermeture du site",	
 	comments."Nombre de commentaires",
 	"Nombre d'acteurs",
 	"Nombre de dispositifs",
@@ -240,11 +243,6 @@ SELECT
 	END
 	AS "Mesures de prévention incendie",
 	-- Objectif résorption
-	CASE s.resorption_target
-	WHEN '2021'
-	THEN 'oui'
-	END
-	AS "Objectif résorption 2021",
 	s.resorption_target AS "Objectif résorption"
 FROM
 	shantytowns s
@@ -291,5 +289,14 @@ LEFT JOIN
 LEFT JOIN
 	-- Département
 	departements d ON d.code = c.fk_departement
+LEFT JOIN
+	-- Origine des ressortissants
+	shantytown_origins so ON so.fk_shantytown = s.shantytown_id
+LEFT JOIN
+	-- Libellé de l'origine des ressortissants
+	social_origins soc ON soc.social_origin_id = so.fk_social_origin
+WHERE
+	-- uniquement resortissants européens
+	so.fk_social_origin = 2
 ORDER BY
 	d.name, c.name, s.shantytown_id
