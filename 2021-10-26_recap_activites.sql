@@ -7,7 +7,7 @@ SELECT
 	ELSE s."address"
 	END AS "Nom du site",
 	s.population_total AS "Population totale",
-	soc."label" AS "Origine des ressortissants",
+	origins.shantytown_social_origins AS "Origine des ressortissants",
 	TO_CHAR(s.updated_at, 'DD/MM/YYYY hh:mm:ss') AS "Date de dernière mise à jour",
 	TO_CHAR(s.closed_at, 'DD/MM/YYYY') AS "Date de fermeture du site",	
 	comments."Nombre de commentaires",
@@ -290,13 +290,17 @@ LEFT JOIN
 	-- Département
 	departements d ON d.code = c.fk_departement
 LEFT JOIN
-	-- Origine des ressortissants
-	shantytown_origins so ON so.fk_shantytown = s.shantytown_id
-LEFT JOIN
-	-- Libellé de l'origine des ressortissants
-	social_origins soc ON soc.social_origin_id = so.fk_social_origin
-WHERE
-	-- uniquement resortissants européens
-	so.fk_social_origin = 2
+	-- Social origin(s)
+	(
+	SELECT
+		sho.fk_shantytown,
+		string_agg(distinct soo."label", ' - ' order by soo."label") as "shantytown_social_origins"
+	FROM
+		shantytown_origins sho
+	LEFT JOIN
+		social_origins soo ON soo.social_origin_id = sho.fk_social_origin 
+	GROUP BY
+		sho.fk_shantytown
+	) AS origins ON origins.fk_shantytown = s.shantytown_id
 ORDER BY
 	d.name, c.name, s.shantytown_id
