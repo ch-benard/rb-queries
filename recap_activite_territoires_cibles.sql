@@ -142,7 +142,7 @@ UNION
 		departement_id
 ) AS t
 WHERE 
-	t.fk_departement IN ()
+	t.fk_departement IN ('13', '34', '44', '49', '59', '69', '94')
 GROUP BY 
 	t.fk_departement
 ORDER BY
