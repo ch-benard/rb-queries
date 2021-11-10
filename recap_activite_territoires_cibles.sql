@@ -1,14 +1,14 @@
 SELECT
-	COUNT(t.closedShantytowns) AS nb_closed,
-	COUNT(t.newShantytowns) AS nb_new,
-	COUNT(t.shantytownsWithComments) AS nb_comments,
-	COUNT(t.shantytownHistories) AS nb_updates,
-	SUM(t.pourcentage_of_completion) AS completion_percentage,
-	array_to_string(array_agg(DISTINCT t.closedShantytowns), ',') AS closed_shantytown_ids,
-    array_to_string(array_agg(DISTINCT t.newShantytowns), ',') AS new_shantytown_ids,
-	array_to_string(array_agg(DISTINCT t.shantytownsWithComments), ',') AS comments_shantytown_ids,
-	array_to_string(array_agg(DISTINCT t.shantytownHistories), ',') AS updates_shantytown_ids,
-	fk_departement
+	COUNT(t.closedShantytowns) AS "Sites fermés/résorbés",
+	COUNT(t.newShantytowns) AS "Sites ouverts",
+	COUNT(t.shantytownsWithComments) AS "Sites avec commentaires",
+	COUNT(t.shantytownHistories) AS "Sites mis à jour",
+	SUM(t.pourcentage_of_completion) AS "Pourcentage de complétion",
+	array_to_string(array_agg(DISTINCT t.closedShantytowns), ',') AS "Identifiants des sites fermés/résorbés",
+    array_to_string(array_agg(DISTINCT t.newShantytowns), ',') AS "Identifiants des sites ouverts",
+	array_to_string(array_agg(DISTINCT t.shantytownsWithComments), ',') AS "Identifiants des sites avec commentaires",
+	array_to_string(array_agg(DISTINCT t.shantytownHistories), ',') AS "Identifiants des sites mis à jour",
+	fk_departement AS "Département"
 FROM
 (
     -- Retrieve new shantytowns
